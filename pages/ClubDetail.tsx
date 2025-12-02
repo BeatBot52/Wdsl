@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Star, Shield, MapPin, Users, ChevronDown, ChevronUp, Trophy } from 'lucide-react';
