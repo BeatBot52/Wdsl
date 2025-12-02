@@ -1,0 +1,22 @@
+{
+  "name": "WDSL Match Centre",
+  "short_name": "WDSL",
+  "description": "Wicklow & District Schoolboys/Girls League Official App",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#020617",
+  "theme_color": "#020617",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "https://img.icons8.com/fluency/192/football2.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://img.icons8.com/fluency/512/football2.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
