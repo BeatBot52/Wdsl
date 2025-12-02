@@ -1,5 +1,4 @@
 
-
 import { NavItem, Fixture, NewsItem, TableRow, Team } from './types';
 
 export const NAV_ITEMS: NavItem[] = [
@@ -11,6 +10,13 @@ export const NAV_ITEMS: NavItem[] = [
 ];
 
 export const PITCH_STATUS = 'ON'; // 'ON' or 'OFF'
+
+// Helper to generate Google Maps Search Link for venues
+export const getVenueMapLink = (venueName: string) => {
+  // Appending ", Wicklow" helps Google Maps narrow down the search to the local area
+  const query = encodeURIComponent(`${venueName}, Wicklow, Ireland`);
+  return `https://www.google.com/maps/search/?api=1&query=${query}`;
+};
 
 // Added colors (Hex codes) for vector generation
 export const CLUBS: Team[] = [
@@ -268,7 +274,8 @@ export const UPCOMING_FIXTURES: Fixture[] = [
     date: new Date(new Date().setHours(18, 30)), // Today 6:30 PM
     venue: 'Travers Insurances Park',
     competition: 'U14 Premier',
-    status: 'upcoming'
+    status: 'upcoming',
+    weather: 'rain'
   },
   {
     id: 'f_today_ssg',
@@ -277,7 +284,8 @@ export const UPCOMING_FIXTURES: Fixture[] = [
     date: new Date(new Date().setHours(18, 0)),
     venue: 'Woodlands',
     competition: 'U8 Group B',
-    status: 'upcoming'
+    status: 'upcoming',
+    weather: 'cloudy'
   },
   {
     id: 'f_today_2',
@@ -286,7 +294,8 @@ export const UPCOMING_FIXTURES: Fixture[] = [
     date: new Date(new Date().setHours(19, 0)), // Today 7:00 PM
     venue: 'Woodlands',
     competition: 'U16 Premier',
-    status: 'upcoming'
+    status: 'upcoming',
+    weather: 'cloudy'
   },
   {
     id: 'f_today_3',
@@ -295,7 +304,8 @@ export const UPCOMING_FIXTURES: Fixture[] = [
     date: new Date(new Date().setHours(19, 30)), 
     venue: 'Ballinalea Park',
     competition: 'U16 Premier',
-    status: 'upcoming'
+    status: 'upcoming',
+    weather: 'rain'
   },
   // Girls Game Today
   {
@@ -305,7 +315,8 @@ export const UPCOMING_FIXTURES: Fixture[] = [
     date: new Date(new Date().setHours(18, 0)),
     venue: 'Whitegates',
     competition: 'Girls U12 Premier',
-    status: 'upcoming'
+    status: 'upcoming',
+    weather: 'rain'
   },
   // Tomorrow
   {
@@ -315,7 +326,8 @@ export const UPCOMING_FIXTURES: Fixture[] = [
     date: addDays(1),
     venue: 'Celtic Park',
     competition: 'U9 Group A',
-    status: 'upcoming'
+    status: 'upcoming',
+    weather: 'sunny'
   },
   {
     id: 'f_tom_1',
@@ -324,7 +336,8 @@ export const UPCOMING_FIXTURES: Fixture[] = [
     date: addDays(1),
     venue: 'Gerry O\'Toole Park',
     competition: 'U14 Premier',
-    status: 'upcoming'
+    status: 'upcoming',
+    weather: 'sunny'
   },
   {
     id: 'f_tom_2',
@@ -333,7 +346,8 @@ export const UPCOMING_FIXTURES: Fixture[] = [
     date: addDays(1),
     venue: 'Vartry Grounds',
     competition: 'U12 Division 1',
-    status: 'upcoming'
+    status: 'upcoming',
+    weather: 'sunny'
   },
   {
     id: 'f_tom_3',
@@ -342,7 +356,8 @@ export const UPCOMING_FIXTURES: Fixture[] = [
     date: addDays(1),
     venue: 'Celtic Park',
     competition: 'U12 Division 2',
-    status: 'upcoming'
+    status: 'upcoming',
+    weather: 'cloudy'
   },
   // Weekend
   {
@@ -352,7 +367,8 @@ export const UPCOMING_FIXTURES: Fixture[] = [
     date: addDays(2),
     venue: 'Avoca',
     competition: 'U10 Group B',
-    status: 'upcoming'
+    status: 'upcoming',
+    weather: 'rain'
   },
   {
     id: 'f_we_1',
@@ -361,7 +377,8 @@ export const UPCOMING_FIXTURES: Fixture[] = [
     date: addDays(2),
     venue: 'Coolboy',
     competition: 'U13 Division 1',
-    status: 'upcoming'
+    status: 'upcoming',
+    weather: 'windy'
   },
   {
     id: 'f_we_2',
@@ -370,7 +387,8 @@ export const UPCOMING_FIXTURES: Fixture[] = [
     date: addDays(2),
     venue: 'Vartry Grounds',
     competition: 'U14 Division 1',
-    status: 'upcoming'
+    status: 'upcoming',
+    weather: 'cloudy'
   },
   {
     id: 'f_we_3',
@@ -379,7 +397,8 @@ export const UPCOMING_FIXTURES: Fixture[] = [
     date: addDays(2),
     venue: 'Berryfield',
     competition: 'U12 Division 1',
-    status: 'upcoming'
+    status: 'upcoming',
+    weather: 'sunny'
   },
   {
     id: 'f_we_4',
@@ -388,7 +407,8 @@ export const UPCOMING_FIXTURES: Fixture[] = [
     date: addDays(3),
     venue: 'Travers Insurances Park',
     competition: 'U12 Premier',
-    status: 'upcoming'
+    status: 'upcoming',
+    weather: 'sunny'
   },
   {
     id: 'f_we_5',
@@ -397,7 +417,8 @@ export const UPCOMING_FIXTURES: Fixture[] = [
     date: addDays(3),
     venue: 'Finn Park',
     competition: 'U12 Premier',
-    status: 'upcoming'
+    status: 'upcoming',
+    weather: 'sunny'
   },
   {
       id: 'f_we_6',
@@ -406,7 +427,8 @@ export const UPCOMING_FIXTURES: Fixture[] = [
       date: addDays(3),
       venue: 'Carnew',
       competition: 'U13 Division 2',
-      status: 'upcoming'
+      status: 'upcoming',
+      weather: 'cloudy'
   }
 ];
 

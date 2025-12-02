@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -20,7 +19,7 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
-    <!-- Tailwind CSS (CDN for immediate preview in web containers) -->
+    <!-- TAILWIND CDN (Failsafe for styling) -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -48,48 +47,21 @@
         }
       }
     </script>
-    <style>
-      /* Custom Scrollbar Hide */
-      .scrollbar-hide::-webkit-scrollbar {
-          display: none;
-      }
-      .scrollbar-hide {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-      }
-      /* PWA Safe Area */
-      .pt-safe {
-        padding-top: env(safe-area-inset-top);
-      }
-      .pb-safe {
-        padding-bottom: env(safe-area-inset-bottom);
-      }
-      /* App-like selection behavior */
-      body {
-        -webkit-user-select: none;
-        user-select: none;
-        -webkit-tap-highlight-color: transparent;
-      }
-      input, textarea {
-        -webkit-user-select: text;
-        user-select: text;
-      }
-    </style>
-
-    <script type="importmap">
-    {
-      "imports": {
-        "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0",
-        "react-router-dom": "https://aistudiocdn.com/react-router-dom@^7.9.6",
-        "react/": "https://aistudiocdn.com/react@^19.2.0/",
-        "react": "https://aistudiocdn.com/react@^19.2.0",
-        "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
-        "react-dom": "https://aistudiocdn.com/react-dom@^19.2.0",
-        "lucide-react": "https://aistudiocdn.com/lucide-react@^0.555.0"
-      }
-    }
-    </script>
-  </head>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0",
+    "react-router-dom": "https://aistudiocdn.com/react-router-dom@^7.10.0",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.555.0",
+    "vite": "https://aistudiocdn.com/vite@^7.2.6",
+    "@vitejs/plugin-react": "https://aistudiocdn.com/@vitejs/plugin-react@^5.1.1"
+  }
+}
+</script>
+</head>
   <body class="bg-slate-950 text-slate-200 antialiased selection:bg-brand-500 selection:text-white overflow-y-scroll">
     <div id="root"></div>
     <script type="module" src="/index.tsx"></script>

@@ -19,6 +19,7 @@ export interface Fixture {
     away: number;
   };
   status: 'upcoming' | 'live' | 'finished' | 'postponed';
+  weather?: 'sunny' | 'rain' | 'cloudy' | 'windy' | 'clear';
 }
 
 export interface NewsItem {

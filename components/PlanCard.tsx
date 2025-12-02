@@ -1,13 +1,36 @@
 
 import React from 'react';
-import { Calendar, MapPin, Clock, CalendarPlus } from 'lucide-react';
+import { Calendar, MapPin, Clock, CalendarPlus, CloudRain, Sun, Cloud, Wind, ExternalLink } from 'lucide-react';
 import { Fixture } from '../types';
 import TeamLogo from './TeamLogo';
+import { getVenueMapLink } from '../constants';
 
 interface MatchCardProps {
   fixture: Fixture;
   variant?: 'default' | 'hero';
 }
+
+const WeatherDisplay: React.FC<{ weather?: string }> = ({ weather }) => {
+  if (!weather) return null;
+
+  const config = {
+    rain: { icon: CloudRain, color: 'text-blue-400', label: 'Rainy' },
+    sunny: { icon: Sun, color: 'text-yellow-400', label: 'Sunny' },
+    cloudy: { icon: Cloud, color: 'text-slate-400', label: 'Cloudy' },
+    windy: { icon: Wind, color: 'text-slate-300', label: 'Windy' },
+    clear: { icon: Sun, color: 'text-orange-300', label: 'Clear' },
+  };
+
+  const current = config[weather as keyof typeof config] || config.cloudy;
+  const Icon = current.icon;
+
+  return (
+    <div className={`flex items-center gap-1 ${current.color} bg-slate-950/50 px-2 py-0.5 rounded text-[10px] font-medium border border-slate-800`}>
+      <Icon size={12} />
+      <span className="hidden sm:inline">{current.label}</span>
+    </div>
+  );
+};
 
 const MatchCard: React.FC<MatchCardProps> = ({ fixture, variant = 'default' }) => {
   const isFinished = fixture.status === 'finished';
@@ -15,6 +38,12 @@ const MatchCard: React.FC<MatchCardProps> = ({ fixture, variant = 'default' }) =
   
   const dateStr = fixture.date.toLocaleDateString('en-IE', { weekday: 'short', day: 'numeric', month: 'short' });
   const timeStr = fixture.date.toLocaleTimeString('en-IE', { hour: '2-digit', minute: '2-digit' });
+  const mapLink = getVenueMapLink(fixture.venue);
+
+  const openMap = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    window.open(mapLink, '_blank', 'noopener,noreferrer');
+  };
 
   const addToCalendar = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -68,9 +97,12 @@ const MatchCard: React.FC<MatchCardProps> = ({ fixture, variant = 'default' }) =
              <span className="bg-black/20 text-white text-[10px] font-bold px-2 py-1 rounded-full backdrop-blur-sm border border-white/10 uppercase tracking-wider">
                {fixture.competition}
              </span>
-             <span className="text-white font-mono font-bold text-xs bg-white/20 px-2 py-1 rounded-lg">
-               {timeStr}
-             </span>
+             <div className="flex gap-2">
+                <WeatherDisplay weather={fixture.weather} />
+                <span className="text-white font-mono font-bold text-xs bg-white/20 px-2 py-1 rounded-lg">
+                   {timeStr}
+                </span>
+             </div>
           </div>
 
           <div className="flex items-center justify-between gap-2">
@@ -95,9 +127,9 @@ const MatchCard: React.FC<MatchCardProps> = ({ fixture, variant = 'default' }) =
               <div className="flex items-center gap-1.5 font-medium">
                   <Calendar size={14} /> {dateStr}
               </div>
-              <div className="flex items-center gap-1.5 font-medium truncate max-w-[120px]">
+              <button onClick={openMap} className="flex items-center gap-1.5 font-medium truncate max-w-[120px] hover:text-white transition-colors">
                   <MapPin size={14} /> <span className="truncate">{fixture.venue}</span>
-              </div>
+              </button>
            </div>
            
            {!isFinished && (
@@ -122,13 +154,16 @@ const MatchCard: React.FC<MatchCardProps> = ({ fixture, variant = 'default' }) =
       {/* Header */}
       <div className="bg-slate-950/50 px-4 py-2 border-b border-slate-800 flex justify-between items-center">
         <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider truncate max-w-[140px]">{fixture.competition}</span>
-        {isFinished ? (
-           <span className="text-[10px] font-bold text-slate-400 bg-slate-800 px-2 py-0.5 rounded">FT</span>
-        ) : (
-           <div className="flex items-center gap-1 text-[10px] font-bold text-brand-400 bg-brand-500/10 px-2 py-0.5 rounded">
-             <Clock size={10} /> {timeStr}
-           </div>
-        )}
+        <div className="flex items-center gap-2">
+            {!isFinished && <WeatherDisplay weather={fixture.weather} />}
+            {isFinished ? (
+               <span className="text-[10px] font-bold text-slate-400 bg-slate-800 px-2 py-0.5 rounded">FT</span>
+            ) : (
+               <div className="flex items-center gap-1 text-[10px] font-bold text-brand-400 bg-brand-500/10 px-2 py-0.5 rounded">
+                 <Clock size={10} /> {timeStr}
+               </div>
+            )}
+        </div>
       </div>
 
       {/* Content */}
@@ -170,9 +205,13 @@ const MatchCard: React.FC<MatchCardProps> = ({ fixture, variant = 'default' }) =
             <div className="flex items-center gap-1.5">
                 <Calendar size={12} /> {dateStr}
             </div>
-            <div className="flex items-center gap-1.5 truncate max-w-[120px] md:max-w-none">
-                <MapPin size={12} /> <span className="truncate">{fixture.venue}</span>
-            </div>
+            <button 
+                onClick={openMap}
+                className="flex items-center gap-1.5 truncate max-w-[120px] md:max-w-none hover:text-brand-400 transition-colors"
+                title="Open in Maps"
+            >
+                <MapPin size={12} /> <span className="truncate underline decoration-dotted">{fixture.venue}</span>
+            </button>
         </div>
 
         {!isFinished && (

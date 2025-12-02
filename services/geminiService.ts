@@ -1,16 +1,10 @@
 import { GoogleGenAI, GenerateContentResponse } from "@google/genai";
 
-// Initialize Gemini client safely
+// Initialize Gemini client safely using env variable
 const getClient = () => {
-  let apiKey = '';
-  try {
-    // Check if process is defined (avoids ReferenceError in browser-only environments)
-    if (typeof process !== 'undefined' && process.env && process.env.API_KEY) {
-      apiKey = process.env.API_KEY;
-    }
-  } catch (e) {
-    console.warn("Could not access process.env");
-  }
+  // Use process.env.API_KEY directly as per @google/genai guidelines.
+  // This also fixes the TypeScript error regarding ImportMeta.
+  const apiKey = process.env.API_KEY;
 
   if (!apiKey) {
     console.warn("API_KEY is missing. AI features will be disabled.");
