@@ -1,9 +1,8 @@
-
 import React from 'react';
-import { Calendar, MapPin, Clock, CalendarPlus, CloudRain, Sun, Cloud, Wind, ExternalLink } from 'lucide-react';
-import { Fixture } from '../types';
+import { Calendar, MapPin, Clock, CalendarPlus, CloudRain, Sun, Cloud, Wind, ExternalLink, Share2, Navigation, TrendingUp } from 'lucide-react';
+import { Fixture, TableRow } from '../types';
 import TeamLogo from './TeamLogo';
-import { getVenueMapLink } from '../constants';
+import { getVenueMapLink, LEAGUE_TABLES } from '../constants';
 
 interface MatchCardProps {
   fixture: Fixture;
@@ -32,6 +31,21 @@ const WeatherDisplay: React.FC<{ weather?: string }> = ({ weather }) => {
   );
 };
 
+// --- HELPER: GET TEAM STATS ---
+const getTeamStats = (division: string, teamName: string) => {
+  const table = LEAGUE_TABLES[division];
+  if (!table) return null;
+  
+  // Find fuzzy match for team name
+  const row = table.find(r => r.team.includes(teamName));
+  if (!row) return null;
+
+  // Calculate Win %
+  const winRate = row.played > 0 ? Math.round((row.won / row.played) * 100) : 0;
+  
+  return { ...row, winRate };
+};
+
 const MatchCard: React.FC<MatchCardProps> = ({ fixture, variant = 'default' }) => {
   const isFinished = fixture.status === 'finished';
   const isHero = variant === 'hero';
@@ -40,9 +54,28 @@ const MatchCard: React.FC<MatchCardProps> = ({ fixture, variant = 'default' }) =
   const timeStr = fixture.date.toLocaleTimeString('en-IE', { hour: '2-digit', minute: '2-digit' });
   const mapLink = getVenueMapLink(fixture.venue);
 
+  // Get Stats if league table exists
+  const homeStats = getTeamStats(fixture.competition, fixture.homeTeam.name);
+  const awayStats = getTeamStats(fixture.competition, fixture.awayTeam.name);
+
   const openMap = (e: React.MouseEvent) => {
     e.stopPropagation();
     window.open(mapLink, '_blank', 'noopener,noreferrer');
+  };
+
+  const shareMatch = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const text = `⚽ Match Invite: ${fixture.homeTeam.shortName} vs ${fixture.awayTeam.shortName}\n🏆 ${fixture.competition}\n📅 ${dateStr} @ ${timeStr}\n📍 ${fixture.venue}\n🗺️ Map: ${mapLink}`;
+    
+    if (navigator.share) {
+      navigator.share({
+        title: 'WDSL Match Details',
+        text: text,
+      }).catch(console.error);
+    } else {
+      navigator.clipboard.writeText(text);
+      alert('Match details copied to clipboard! Paste into WhatsApp.');
+    }
   };
 
   const addToCalendar = (e: React.MouseEvent) => {
@@ -133,12 +166,20 @@ const MatchCard: React.FC<MatchCardProps> = ({ fixture, variant = 'default' }) =
            </div>
            
            {!isFinished && (
-             <button 
-               onClick={addToCalendar}
-               className="flex items-center gap-1.5 bg-white/20 hover:bg-white/30 text-white px-3 py-1.5 rounded-lg text-[10px] font-bold transition-colors active:scale-95"
-             >
-               <CalendarPlus size={12} /> Add
-             </button>
+             <div className="flex items-center gap-2">
+                 <button 
+                   onClick={shareMatch}
+                   className="flex items-center gap-1.5 bg-white/20 hover:bg-white/30 text-white px-3 py-1.5 rounded-lg text-[10px] font-bold transition-colors"
+                 >
+                    <Share2 size={12} />
+                 </button>
+                 <button 
+                   onClick={addToCalendar}
+                   className="flex items-center gap-1.5 bg-white/20 hover:bg-white/30 text-white px-3 py-1.5 rounded-lg text-[10px] font-bold transition-colors active:scale-95"
+                 >
+                   <CalendarPlus size={12} /> Add
+                 </button>
+             </div>
            )}
         </div>
       </div>
@@ -153,7 +194,15 @@ const MatchCard: React.FC<MatchCardProps> = ({ fixture, variant = 'default' }) =
       
       {/* Header */}
       <div className="bg-slate-950/50 px-4 py-2 border-b border-slate-800 flex justify-between items-center">
-        <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider truncate max-w-[140px]">{fixture.competition}</span>
+        <div className="flex items-center gap-2">
+           <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider truncate max-w-[140px]">{fixture.competition}</span>
+           {!isFinished && homeStats && awayStats && (
+              <div className="hidden sm:flex items-center gap-1 text-[9px] font-medium text-slate-500 bg-slate-800/50 px-1.5 py-0.5 rounded border border-slate-700">
+                 <TrendingUp size={10} className="text-brand-500" />
+                 <span>POS: <span className="text-white">{homeStats.position}</span> vs <span className="text-white">{awayStats.position}</span></span>
+              </div>
+           )}
+        </div>
         <div className="flex items-center gap-2">
             {!isFinished && <WeatherDisplay weather={fixture.weather} />}
             {isFinished ? (
@@ -174,6 +223,15 @@ const MatchCard: React.FC<MatchCardProps> = ({ fixture, variant = 'default' }) =
           <div className="flex-1 flex flex-col items-center gap-2">
             <TeamLogo team={fixture.homeTeam} size="md" className="transition-transform group-hover:scale-105 duration-300" />
             <span className="text-xs font-bold text-slate-200 text-center leading-tight line-clamp-2 h-8 flex items-center justify-center w-full">{fixture.homeTeam.name}</span>
+            {/* Win % Bar */}
+            {!isFinished && homeStats && homeStats.played > 0 && (
+                <div className="flex flex-col items-center w-full max-w-[60px] gap-1">
+                   <div className="w-full h-1 bg-slate-800 rounded-full overflow-hidden flex">
+                       <div className="h-full bg-brand-500" style={{ width: `${homeStats.winRate}%` }}></div>
+                   </div>
+                   <span className="text-[9px] text-slate-500 font-mono">{homeStats.winRate}% Win</span>
+                </div>
+            )}
           </div>
 
           {/* Score / VS */}
@@ -185,7 +243,7 @@ const MatchCard: React.FC<MatchCardProps> = ({ fixture, variant = 'default' }) =
                  <span className="text-lg font-black text-white">{fixture.score.away}</span>
                </div>
              ) : (
-               <div className="flex flex-col items-center justify-center w-8 h-8 rounded-full bg-slate-950 border border-slate-800">
+               <div className="flex flex-col items-center justify-center w-8 h-8 rounded-full bg-slate-950 border border-slate-800 shadow-inner">
                   <span className="text-[10px] font-black text-slate-600">VS</span>
                </div>
              )}
@@ -195,6 +253,15 @@ const MatchCard: React.FC<MatchCardProps> = ({ fixture, variant = 'default' }) =
           <div className="flex-1 flex flex-col items-center gap-2">
             <TeamLogo team={fixture.awayTeam} size="md" className="transition-transform group-hover:scale-105 duration-300" />
             <span className="text-xs font-bold text-slate-200 text-center leading-tight line-clamp-2 h-8 flex items-center justify-center w-full">{fixture.awayTeam.name}</span>
+            {/* Win % Bar */}
+            {!isFinished && awayStats && awayStats.played > 0 && (
+                <div className="flex flex-col items-center w-full max-w-[60px] gap-1">
+                   <div className="w-full h-1 bg-slate-800 rounded-full overflow-hidden flex">
+                       <div className="h-full bg-brand-500" style={{ width: `${awayStats.winRate}%` }}></div>
+                   </div>
+                   <span className="text-[9px] text-slate-500 font-mono">{awayStats.winRate}% Win</span>
+                </div>
+            )}
           </div>
         </div>
       </div>
@@ -207,21 +274,30 @@ const MatchCard: React.FC<MatchCardProps> = ({ fixture, variant = 'default' }) =
             </div>
             <button 
                 onClick={openMap}
-                className="flex items-center gap-1.5 truncate max-w-[120px] md:max-w-none hover:text-brand-400 transition-colors"
-                title="Open in Maps"
+                className="flex items-center gap-1.5 text-brand-400 hover:text-white transition-colors bg-brand-900/10 px-2 py-1 rounded hover:bg-brand-900/30 border border-transparent hover:border-brand-500/20"
+                title="Get Directions"
             >
-                <MapPin size={12} /> <span className="truncate underline decoration-dotted">{fixture.venue}</span>
+                <Navigation size={10} /> <span className="truncate max-w-[80px] font-bold">Directions</span>
             </button>
         </div>
 
         {!isFinished && (
-           <button 
-             onClick={addToCalendar}
-             className="text-brand-400 hover:text-white transition-colors p-1.5 -mr-1 rounded-lg hover:bg-brand-600/20"
-             title="Add to Calendar"
-           >
-             <CalendarPlus size={16} />
-           </button>
+           <div className="flex items-center gap-1">
+             <button 
+               onClick={shareMatch}
+               className="text-slate-400 hover:text-brand-400 transition-colors p-1.5 rounded-lg hover:bg-slate-800"
+               title="Share to WhatsApp"
+             >
+               <Share2 size={16} />
+             </button>
+             <button 
+               onClick={addToCalendar}
+               className="text-slate-400 hover:text-brand-400 transition-colors p-1.5 rounded-lg hover:bg-slate-800"
+               title="Add to Calendar"
+             >
+               <CalendarPlus size={16} />
+             </button>
+           </div>
         )}
       </div>
     </div>

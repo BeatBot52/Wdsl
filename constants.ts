@@ -1,4 +1,3 @@
-
 import { NavItem, Fixture, NewsItem, TableRow, Team } from './types';
 
 export const NAV_ITEMS: NavItem[] = [
@@ -58,44 +57,44 @@ const addDays = (days: number) => {
 export const LEAGUE_TABLES: Record<string, TableRow[]> = {
   // --- UNDER 8 (Non-Competitive) ---
   'U8 Group A': [
-    { position: 1, team: 'Arklow Town A', played: 0, won: 0, drawn: 0, lost: 0, gd: 0, points: 0 },
-    { position: 2, team: 'Wicklow Rovers A', played: 0, won: 0, drawn: 0, lost: 0, gd: 0, points: 0 },
-    { position: 3, team: 'Ashford Rovers', played: 0, won: 0, drawn: 0, lost: 0, gd: 0, points: 0 },
-    { position: 4, team: 'Rathnew AFC', played: 0, won: 0, drawn: 0, lost: 0, gd: 0, points: 0 },
+    { position: 0, team: 'Arklow Town A', played: 0, won: 0, drawn: 0, lost: 0, gd: 0, points: 0 },
+    { position: 0, team: 'Wicklow Rovers A', played: 0, won: 0, drawn: 0, lost: 0, gd: 0, points: 0 },
+    { position: 0, team: 'Ashford Rovers', played: 0, won: 0, drawn: 0, lost: 0, gd: 0, points: 0 },
+    { position: 0, team: 'Rathnew AFC', played: 0, won: 0, drawn: 0, lost: 0, gd: 0, points: 0 },
   ],
   'U8 Group B': [
-    { position: 1, team: 'Greystones United A', played: 0, won: 0, drawn: 0, lost: 0, gd: 0, points: 0 },
-    { position: 2, team: 'Newtown Juniors', played: 0, won: 0, drawn: 0, lost: 0, gd: 0, points: 0 },
-    { position: 3, team: 'St. Anthonys', played: 0, won: 0, drawn: 0, lost: 0, gd: 0, points: 0 },
-    { position: 4, team: 'Enniskerry YC', played: 0, won: 0, drawn: 0, lost: 0, gd: 0, points: 0 },
+    { position: 0, team: 'Greystones United A', played: 0, won: 0, drawn: 0, lost: 0, gd: 0, points: 0 },
+    { position: 0, team: 'Newtown Juniors', played: 0, won: 0, drawn: 0, lost: 0, gd: 0, points: 0 },
+    { position: 0, team: 'St. Anthonys', played: 0, won: 0, drawn: 0, lost: 0, gd: 0, points: 0 },
+    { position: 0, team: 'Enniskerry YC', played: 0, won: 0, drawn: 0, lost: 0, gd: 0, points: 0 },
   ],
 
   // --- UNDER 9 ---
   'U9 Group A': [
-     { position: 1, team: 'Arklow Town A', played: 0, won: 0, drawn: 0, lost: 0, gd: 0, points: 0 },
-     { position: 2, team: 'Arklow United', played: 0, won: 0, drawn: 0, lost: 0, gd: 0, points: 0 },
-     { position: 3, team: 'Arklow Celtic', played: 0, won: 0, drawn: 0, lost: 0, gd: 0, points: 0 },
-     { position: 4, team: 'Coolboy Rangers', played: 0, won: 0, drawn: 0, lost: 0, gd: 0, points: 0 },
+     { position: 0, team: 'Arklow Town A', played: 0, won: 0, drawn: 0, lost: 0, gd: 0, points: 0 },
+     { position: 0, team: 'Arklow United', played: 0, won: 0, drawn: 0, lost: 0, gd: 0, points: 0 },
+     { position: 0, team: 'Arklow Celtic', played: 0, won: 0, drawn: 0, lost: 0, gd: 0, points: 0 },
+     { position: 0, team: 'Coolboy Rangers', played: 0, won: 0, drawn: 0, lost: 0, gd: 0, points: 0 },
   ],
   'U9 Group B': [
-     { position: 1, team: 'Wicklow Rovers A', played: 0, won: 0, drawn: 0, lost: 0, gd: 0, points: 0 },
-     { position: 2, team: 'Rathnew AFC', played: 0, won: 0, drawn: 0, lost: 0, gd: 0, points: 0 },
-     { position: 3, team: 'Ashford Rovers', played: 0, won: 0, drawn: 0, lost: 0, gd: 0, points: 0 },
-     { position: 4, team: 'Glencormac United', played: 0, won: 0, drawn: 0, lost: 0, gd: 0, points: 0 },
+     { position: 0, team: 'Wicklow Rovers A', played: 0, won: 0, drawn: 0, lost: 0, gd: 0, points: 0 },
+     { position: 0, team: 'Rathnew AFC', played: 0, won: 0, drawn: 0, lost: 0, gd: 0, points: 0 },
+     { position: 0, team: 'Ashford Rovers', played: 0, won: 0, drawn: 0, lost: 0, gd: 0, points: 0 },
+     { position: 0, team: 'Glencormac United', played: 0, won: 0, drawn: 0, lost: 0, gd: 0, points: 0 },
   ],
 
   // --- UNDER 10 ---
   'U10 Group A': [
-    { position: 1, team: 'Greystones United A', played: 0, won: 0, drawn: 0, lost: 0, gd: 0, points: 0 },
-    { position: 2, team: 'Ardmore Rovers', played: 0, won: 0, drawn: 0, lost: 0, gd: 0, points: 0 },
-    { position: 3, team: 'Enniskerry YC', played: 0, won: 0, drawn: 0, lost: 0, gd: 0, points: 0 },
-    { position: 4, team: 'Wolfe Tone', played: 0, won: 0, drawn: 0, lost: 0, gd: 0, points: 0 },
+    { position: 0, team: 'Greystones United A', played: 0, won: 0, drawn: 0, lost: 0, gd: 0, points: 0 },
+    { position: 0, team: 'Ardmore Rovers', played: 0, won: 0, drawn: 0, lost: 0, gd: 0, points: 0 },
+    { position: 0, team: 'Enniskerry YC', played: 0, won: 0, drawn: 0, lost: 0, gd: 0, points: 0 },
+    { position: 0, team: 'Wolfe Tone', played: 0, won: 0, drawn: 0, lost: 0, gd: 0, points: 0 },
   ],
   'U10 Group B': [
-    { position: 1, team: 'St. Patricks', played: 0, won: 0, drawn: 0, lost: 0, gd: 0, points: 0 },
-    { position: 2, team: 'Avonmore', played: 0, won: 0, drawn: 0, lost: 0, gd: 0, points: 0 },
-    { position: 3, team: 'Roundwood AFC', played: 0, won: 0, drawn: 0, lost: 0, gd: 0, points: 0 },
-    { position: 4, team: 'Aughrim Rangers', played: 0, won: 0, drawn: 0, lost: 0, gd: 0, points: 0 },
+    { position: 0, team: 'St. Patricks', played: 0, won: 0, drawn: 0, lost: 0, gd: 0, points: 0 },
+    { position: 0, team: 'Avonmore', played: 0, won: 0, drawn: 0, lost: 0, gd: 0, points: 0 },
+    { position: 0, team: 'Roundwood AFC', played: 0, won: 0, drawn: 0, lost: 0, gd: 0, points: 0 },
+    { position: 0, team: 'Aughrim Rangers', played: 0, won: 0, drawn: 0, lost: 0, gd: 0, points: 0 },
   ],
   
   // --- UNDER 11 ---
@@ -233,9 +232,15 @@ export const LEAGUE_TABLES: Record<string, TableRow[]> = {
 
   // --- GIRLS LEAGUES ---
   'Girls U10 Group A': [
-      { position: 1, team: 'Arklow Town', played: 0, won: 0, drawn: 0, lost: 0, gd: 0, points: 0 },
-      { position: 2, team: 'Wicklow Rovers', played: 0, won: 0, drawn: 0, lost: 0, gd: 0, points: 0 },
-      { position: 3, team: 'Greystones United', played: 0, won: 0, drawn: 0, lost: 0, gd: 0, points: 0 },
+      { position: 0, team: 'Arklow Town', played: 0, won: 0, drawn: 0, lost: 0, gd: 0, points: 0 },
+      { position: 0, team: 'Wicklow Rovers', played: 0, won: 0, drawn: 0, lost: 0, gd: 0, points: 0 },
+      { position: 0, team: 'Greystones United', played: 0, won: 0, drawn: 0, lost: 0, gd: 0, points: 0 },
+      { position: 0, team: 'Newtown Juniors', played: 0, won: 0, drawn: 0, lost: 0, gd: 0, points: 0 },
+  ],
+  'Girls U11 Premier': [
+      { position: 1, team: 'Wicklow Rovers', played: 6, won: 5, drawn: 0, lost: 1, gd: 15, points: 15 },
+      { position: 2, team: 'Arklow Town', played: 6, won: 4, drawn: 0, lost: 2, gd: 10, points: 12 },
+      { position: 3, team: 'St. Patricks', played: 6, won: 2, drawn: 0, lost: 4, gd: -5, points: 6 },
   ],
   'Girls U12 Premier': [
       { position: 1, team: 'Wicklow Rovers', played: 10, won: 10, drawn: 0, lost: 0, gd: 40, points: 30 },
@@ -243,12 +248,27 @@ export const LEAGUE_TABLES: Record<string, TableRow[]> = {
       { position: 3, team: 'Greystones United', played: 10, won: 5, drawn: 1, lost: 4, gd: 5, points: 16 },
       { position: 4, team: 'Newtown Juniors', played: 10, won: 2, drawn: 0, lost: 8, gd: -20, points: 6 },
   ],
+  'Girls U13 Premier': [
+      { position: 1, team: 'Glencormac United', played: 5, won: 5, drawn: 0, lost: 0, gd: 20, points: 15 },
+      { position: 2, team: 'Arklow Town', played: 5, won: 3, drawn: 0, lost: 2, gd: 5, points: 9 },
+      { position: 3, team: 'Wicklow Rovers', played: 5, won: 1, drawn: 0, lost: 4, gd: -10, points: 3 },
+  ],
   'Girls U14 Premier': [
       { position: 1, team: 'Arklow Town', played: 8, won: 6, drawn: 1, lost: 1, gd: 18, points: 19 },
       { position: 2, team: 'Glencormac United', played: 8, won: 5, drawn: 2, lost: 1, gd: 12, points: 17 },
       { position: 3, team: 'St. Patricks', played: 8, won: 3, drawn: 1, lost: 4, gd: -5, points: 10 },
       { position: 4, team: 'Wicklow Rovers', played: 8, won: 1, drawn: 0, lost: 7, gd: -25, points: 3 },
-  ]
+  ],
+  'Girls U15 Premier': [
+      { position: 1, team: 'Greystones United', played: 6, won: 4, drawn: 1, lost: 1, gd: 10, points: 13 },
+      { position: 2, team: 'Wicklow Rovers', played: 6, won: 3, drawn: 1, lost: 2, gd: 5, points: 10 },
+      { position: 3, team: 'Arklow Town', played: 6, won: 2, drawn: 2, lost: 2, gd: 0, points: 8 },
+  ],
+  'Girls U16 Premier': [
+      { position: 1, team: 'Wicklow Rovers', played: 8, won: 7, drawn: 0, lost: 1, gd: 20, points: 21 },
+      { position: 2, team: 'Arklow Town', played: 8, won: 5, drawn: 0, lost: 3, gd: 10, points: 15 },
+      { position: 3, team: 'Newtown Juniors', played: 8, won: 0, drawn: 0, lost: 8, gd: -30, points: 0 },
+  ],
 };
 
 // Returns a list of divisions a specific club plays in
@@ -265,6 +285,7 @@ export const getClubDivisions = (clubName: string): string[] => {
   return playingDivisions;
 };
 
+// --- FIXTURES REMAIN UNCHANGED FROM PREVIOUS ---
 export const UPCOMING_FIXTURES: Fixture[] = [
   // Today's Games (Live/Upcoming)
   {
