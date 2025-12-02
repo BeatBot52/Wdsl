@@ -63,15 +63,22 @@ const MatchCard: React.FC<MatchCardProps> = ({ fixture, variant = 'default' }) =
     window.open(mapLink, '_blank', 'noopener,noreferrer');
   };
 
-  const shareMatch = (e: React.MouseEvent) => {
+  const shareMatch = async (e: React.MouseEvent) => {
     e.stopPropagation();
     const text = `⚽ Match Invite: ${fixture.homeTeam.shortName} vs ${fixture.awayTeam.shortName}\n🏆 ${fixture.competition}\n📅 ${dateStr} @ ${timeStr}\n📍 ${fixture.venue}\n🗺️ Map: ${mapLink}`;
     
     if (navigator.share) {
-      navigator.share({
-        title: 'WDSL Match Details',
-        text: text,
-      }).catch(console.error);
+      try {
+        await navigator.share({
+          title: 'WDSL Match Details',
+          text: text,
+        });
+      } catch (error: any) {
+        // Ignore AbortError (User cancelled the share dialog)
+        if (error.name !== 'AbortError') {
+          console.error('Error sharing:', error);
+        }
+      }
     } else {
       navigator.clipboard.writeText(text);
       alert('Match details copied to clipboard! Paste into WhatsApp.');
