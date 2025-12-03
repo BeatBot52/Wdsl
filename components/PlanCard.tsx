@@ -1,5 +1,5 @@
-import React from 'react';
-import { Calendar, MapPin, Clock, CalendarPlus, CloudRain, Sun, Cloud, Wind, ExternalLink, Share2, Navigation, TrendingUp } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Calendar, MapPin, Clock, CalendarPlus, CloudRain, Sun, Cloud, Wind, ExternalLink, Share2, Navigation, TrendingUp, Radio, AlertTriangle, Minus, Plus } from 'lucide-react';
 import { Fixture, TableRow } from '../types';
 import TeamLogo from './TeamLogo';
 import { getVenueMapLink, LEAGUE_TABLES } from '../constants';
@@ -7,6 +7,7 @@ import { getVenueMapLink, LEAGUE_TABLES } from '../constants';
 interface MatchCardProps {
   fixture: Fixture;
   variant?: 'default' | 'hero';
+  className?: string;
 }
 
 const WeatherDisplay: React.FC<{ weather?: string }> = ({ weather }) => {
@@ -46,7 +47,7 @@ const getTeamStats = (division: string, teamName: string) => {
   return { ...row, winRate };
 };
 
-const MatchCard: React.FC<MatchCardProps> = ({ fixture, variant = 'default' }) => {
+const MatchCard: React.FC<MatchCardProps> = ({ fixture, variant = 'default', className = '' }) => {
   const isFinished = fixture.status === 'finished';
   const isHero = variant === 'hero';
   
@@ -58,6 +59,32 @@ const MatchCard: React.FC<MatchCardProps> = ({ fixture, variant = 'default' }) =
   const homeStats = getTeamStats(fixture.competition, fixture.homeTeam.name);
   const awayStats = getTeamStats(fixture.competition, fixture.awayTeam.name);
 
+  // --- LIVE SCORE STATE ---
+  const [showLiveUpdater, setShowLiveUpdater] = useState(false);
+  const [liveScore, setLiveScore] = useState(fixture.score || { home: 0, away: 0 });
+  const [isFanUpdated, setIsFanUpdated] = useState(false);
+
+  // Load saved score from local storage on mount (simulating persistence)
+  useEffect(() => {
+    const saved = localStorage.getItem(`live_score_${fixture.id}`);
+    if (saved) {
+      setLiveScore(JSON.parse(saved));
+      setIsFanUpdated(true);
+    }
+  }, [fixture.id]);
+
+  const updateScore = (team: 'home' | 'away', delta: number) => {
+    setLiveScore(prev => {
+      const newVal = Math.max(0, prev[team] + delta);
+      const newScore = { ...prev, [team]: newVal };
+      
+      // Save to local storage
+      localStorage.setItem(`live_score_${fixture.id}`, JSON.stringify(newScore));
+      setIsFanUpdated(true);
+      return newScore;
+    });
+  };
+
   const openMap = (e: React.MouseEvent) => {
     e.stopPropagation();
     window.open(mapLink, '_blank', 'noopener,noreferrer');
@@ -65,7 +92,8 @@ const MatchCard: React.FC<MatchCardProps> = ({ fixture, variant = 'default' }) =
 
   const shareMatch = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    const text = `⚽ Match Invite: ${fixture.homeTeam.shortName} vs ${fixture.awayTeam.shortName}\n🏆 ${fixture.competition}\n📅 ${dateStr} @ ${timeStr}\n📍 ${fixture.venue}\n🗺️ Map: ${mapLink}`;
+    const scoreText = isFanUpdated ? `(Live: ${liveScore.home}-${liveScore.away})` : '';
+    const text = `⚽ Match Invite: ${fixture.homeTeam.shortName} vs ${fixture.awayTeam.shortName} ${scoreText}\n🏆 ${fixture.competition}\n📅 ${dateStr} @ ${timeStr}\n📍 ${fixture.venue}\n🗺️ Map: ${mapLink}`;
     
     if (navigator.share) {
       try {
@@ -123,11 +151,11 @@ const MatchCard: React.FC<MatchCardProps> = ({ fixture, variant = 'default' }) =
   };
 
   // ----------------------------------------------------------------------
-  // HERO CARD (Compact Version for New Dashboard)
+  // HERO CARD
   // ----------------------------------------------------------------------
   if (isHero) {
     return (
-      <div className="bg-gradient-to-br from-brand-600 to-brand-800 rounded-3xl shadow-xl shadow-brand-900/50 overflow-hidden relative group">
+      <div className={`bg-gradient-to-br from-brand-600 to-brand-800 rounded-3xl shadow-xl shadow-brand-900/50 overflow-hidden relative group ${className}`}>
         <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
            <Calendar size={120} className="text-white" />
         </div>
@@ -152,7 +180,14 @@ const MatchCard: React.FC<MatchCardProps> = ({ fixture, variant = 'default' }) =
             </div>
 
             <div className="flex flex-col items-center gap-1">
-               <span className="text-brand-200 text-[10px] font-bold uppercase opacity-60">VS</span>
+               {(isFinished || isFanUpdated) ? (
+                 <div className="bg-slate-900/90 text-white px-4 py-2 rounded-xl font-black text-2xl border border-white/20 shadow-lg backdrop-blur-md">
+                    {liveScore.home} - {liveScore.away}
+                 </div>
+               ) : (
+                 <span className="text-brand-200 text-[10px] font-bold uppercase opacity-60">VS</span>
+               )}
+               {isFanUpdated && <span className="text-[9px] text-yellow-300 font-bold animate-pulse mt-1">LIVE (Fan)</span>}
             </div>
 
             <div className="flex flex-col items-center gap-2 flex-1">
@@ -172,23 +207,55 @@ const MatchCard: React.FC<MatchCardProps> = ({ fixture, variant = 'default' }) =
               </button>
            </div>
            
-           {!isFinished && (
-             <div className="flex items-center gap-2">
-                 <button 
-                   onClick={shareMatch}
-                   className="flex items-center gap-1.5 bg-white/20 hover:bg-white/30 text-white px-3 py-1.5 rounded-lg text-[10px] font-bold transition-colors"
-                 >
-                    <Share2 size={12} />
-                 </button>
-                 <button 
-                   onClick={addToCalendar}
-                   className="flex items-center gap-1.5 bg-white/20 hover:bg-white/30 text-white px-3 py-1.5 rounded-lg text-[10px] font-bold transition-colors active:scale-95"
-                 >
-                   <CalendarPlus size={12} /> Add
-                 </button>
-             </div>
-           )}
+           <div className="flex items-center gap-2">
+             {!isFinished && (
+               <button 
+                 onClick={() => setShowLiveUpdater(!showLiveUpdater)}
+                 className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-[10px] font-bold transition-colors ${showLiveUpdater ? 'bg-brand-500 text-white' : 'bg-white/20 hover:bg-white/30 text-white'}`}
+               >
+                 {showLiveUpdater ? 'Close' : 'Update'}
+               </button>
+             )}
+             <button 
+               onClick={shareMatch}
+               className="flex items-center gap-1.5 bg-white/20 hover:bg-white/30 text-white px-3 py-1.5 rounded-lg text-[10px] font-bold transition-colors"
+             >
+                <Share2 size={12} />
+             </button>
+           </div>
         </div>
+
+        {/* --- LIVE UPDATER CONTROLS (HERO) --- */}
+        {showLiveUpdater && !isFinished && (
+          <div className="bg-slate-950 p-4 border-t border-slate-800 animate-in slide-in-from-top-2 duration-300 relative z-20">
+             <div className="flex items-center justify-between gap-4 mb-3">
+                {/* Home Controls */}
+                <div className="flex items-center gap-2">
+                   <button onClick={() => updateScore('home', -1)} className="w-8 h-8 flex items-center justify-center rounded-full bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-white border border-slate-700"><Minus size={14} /></button>
+                   <span className="font-mono font-bold text-white w-6 text-center text-lg">{liveScore.home}</span>
+                   <button onClick={() => updateScore('home', 1)} className="w-8 h-8 flex items-center justify-center rounded-full bg-brand-600 text-white hover:bg-brand-500 shadow-lg shadow-brand-500/20"><Plus size={14} /></button>
+                </div>
+                
+                <span className="text-[10px] font-bold text-slate-500">GOALS</span>
+
+                {/* Away Controls */}
+                <div className="flex items-center gap-2">
+                   <button onClick={() => updateScore('away', -1)} className="w-8 h-8 flex items-center justify-center rounded-full bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-white border border-slate-700"><Minus size={14} /></button>
+                   <span className="font-mono font-bold text-white w-6 text-center text-lg">{liveScore.away}</span>
+                   <button onClick={() => updateScore('away', 1)} className="w-8 h-8 flex items-center justify-center rounded-full bg-brand-600 text-white hover:bg-brand-500 shadow-lg shadow-brand-500/20"><Plus size={14} /></button>
+                </div>
+             </div>
+             
+             {/* Disclaimer Banner */}
+             <div className="bg-yellow-500/10 border border-yellow-500/20 p-2.5 rounded-lg flex items-start gap-2">
+                <AlertTriangle size={14} className="text-yellow-500 shrink-0 mt-0.5" />
+                <p className="text-[10px] text-yellow-200/80 leading-tight">
+                  <strong className="text-yellow-400 block mb-0.5">Unofficial Fan Score</strong>
+                  Scores are updated by people at the match. Please check back later for official results confirmed by referee and clubs.
+                </p>
+             </div>
+          </div>
+        )}
       </div>
     );
   }
@@ -197,7 +264,7 @@ const MatchCard: React.FC<MatchCardProps> = ({ fixture, variant = 'default' }) =
   // DEFAULT CARD (List View)
   // ----------------------------------------------------------------------
   return (
-    <div className="bg-slate-900 rounded-2xl border border-slate-800 shadow-sm overflow-hidden relative group active:border-slate-700 transition-colors">
+    <div className={`bg-slate-900 rounded-2xl border border-slate-800 shadow-sm overflow-hidden relative group active:border-slate-700 transition-colors ${className}`}>
       
       {/* Header */}
       <div className="bg-slate-950/50 px-4 py-2 border-b border-slate-800 flex justify-between items-center">
@@ -214,6 +281,10 @@ const MatchCard: React.FC<MatchCardProps> = ({ fixture, variant = 'default' }) =
             {!isFinished && <WeatherDisplay weather={fixture.weather} />}
             {isFinished ? (
                <span className="text-[10px] font-bold text-slate-400 bg-slate-800 px-2 py-0.5 rounded">FT</span>
+            ) : isFanUpdated ? (
+               <span className="flex items-center gap-1 text-[10px] font-bold text-red-400 bg-red-900/20 px-2 py-0.5 rounded border border-red-900/30 animate-pulse">
+                 <Radio size={10} /> Live
+               </span>
             ) : (
                <div className="flex items-center gap-1 text-[10px] font-bold text-brand-400 bg-brand-500/10 px-2 py-0.5 rounded">
                  <Clock size={10} /> {timeStr}
@@ -230,7 +301,6 @@ const MatchCard: React.FC<MatchCardProps> = ({ fixture, variant = 'default' }) =
           <div className="flex-1 flex flex-col items-center gap-2">
             <TeamLogo team={fixture.homeTeam} size="md" className="transition-transform group-hover:scale-105 duration-300" />
             <span className="text-xs font-bold text-slate-200 text-center leading-tight line-clamp-2 h-8 flex items-center justify-center w-full">{fixture.homeTeam.name}</span>
-            {/* Win % Bar */}
             {!isFinished && homeStats && homeStats.played > 0 && (
                 <div className="flex flex-col items-center w-full max-w-[60px] gap-1">
                    <div className="w-full h-1 bg-slate-800 rounded-full overflow-hidden flex">
@@ -241,18 +311,28 @@ const MatchCard: React.FC<MatchCardProps> = ({ fixture, variant = 'default' }) =
             )}
           </div>
 
-          {/* Score / VS */}
-          <div className="shrink-0 px-2">
-             {isFinished && fixture.score ? (
-               <div className="flex items-center gap-2 bg-slate-950 px-3 py-1.5 rounded-lg border border-slate-800">
-                 <span className="text-lg font-black text-white">{fixture.score.home}</span>
+          {/* Score / VS / Live Inputs */}
+          <div className="shrink-0 px-2 flex flex-col items-center">
+             {(isFinished || isFanUpdated) ? (
+               <div className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border ${isFanUpdated ? 'bg-slate-800 border-yellow-500/50' : 'bg-slate-950 border-slate-800'}`}>
+                 <span className={`text-lg font-black ${isFanUpdated ? 'text-yellow-400' : 'text-white'}`}>{liveScore.home}</span>
                  <span className="text-slate-600 text-xs">:</span>
-                 <span className="text-lg font-black text-white">{fixture.score.away}</span>
+                 <span className={`text-lg font-black ${isFanUpdated ? 'text-yellow-400' : 'text-white'}`}>{liveScore.away}</span>
                </div>
              ) : (
                <div className="flex flex-col items-center justify-center w-8 h-8 rounded-full bg-slate-950 border border-slate-800 shadow-inner">
                   <span className="text-[10px] font-black text-slate-600">VS</span>
                </div>
+             )}
+             
+             {/* Live Update Toggle Button */}
+             {!isFinished && (
+               <button 
+                 onClick={() => setShowLiveUpdater(!showLiveUpdater)}
+                 className={`mt-2 text-[10px] font-bold px-2 py-1 rounded-full flex items-center gap-1 transition-all ${showLiveUpdater ? 'bg-brand-600 text-white' : 'text-brand-500 bg-brand-900/10 hover:bg-brand-900/20'}`}
+               >
+                 {showLiveUpdater ? 'Close' : 'Update'}
+               </button>
              )}
           </div>
 
@@ -260,7 +340,6 @@ const MatchCard: React.FC<MatchCardProps> = ({ fixture, variant = 'default' }) =
           <div className="flex-1 flex flex-col items-center gap-2">
             <TeamLogo team={fixture.awayTeam} size="md" className="transition-transform group-hover:scale-105 duration-300" />
             <span className="text-xs font-bold text-slate-200 text-center leading-tight line-clamp-2 h-8 flex items-center justify-center w-full">{fixture.awayTeam.name}</span>
-            {/* Win % Bar */}
             {!isFinished && awayStats && awayStats.played > 0 && (
                 <div className="flex flex-col items-center w-full max-w-[60px] gap-1">
                    <div className="w-full h-1 bg-slate-800 rounded-full overflow-hidden flex">
@@ -271,6 +350,38 @@ const MatchCard: React.FC<MatchCardProps> = ({ fixture, variant = 'default' }) =
             )}
           </div>
         </div>
+
+        {/* --- LIVE UPDATER CONTROLS (DEFAULT) --- */}
+        {showLiveUpdater && !isFinished && (
+          <div className="mt-4 bg-slate-950/50 p-3 rounded-xl border border-slate-700 animate-in slide-in-from-top-2 duration-300">
+             <div className="flex items-center justify-between gap-4 mb-2">
+                {/* Home Controls */}
+                <div className="flex items-center gap-2">
+                   <button onClick={() => updateScore('home', -1)} className="w-8 h-8 flex items-center justify-center rounded-full bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-white border border-slate-600"><Minus size={14} /></button>
+                   <span className="font-mono font-bold text-white w-4 text-center">{liveScore.home}</span>
+                   <button onClick={() => updateScore('home', 1)} className="w-8 h-8 flex items-center justify-center rounded-full bg-brand-600 text-white hover:bg-brand-500 shadow-lg shadow-brand-500/20"><Plus size={14} /></button>
+                </div>
+                
+                <span className="text-[10px] font-bold text-slate-500">SCORE</span>
+
+                {/* Away Controls */}
+                <div className="flex items-center gap-2">
+                   <button onClick={() => updateScore('away', -1)} className="w-8 h-8 flex items-center justify-center rounded-full bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-white border border-slate-600"><Minus size={14} /></button>
+                   <span className="font-mono font-bold text-white w-4 text-center">{liveScore.away}</span>
+                   <button onClick={() => updateScore('away', 1)} className="w-8 h-8 flex items-center justify-center rounded-full bg-brand-600 text-white hover:bg-brand-500 shadow-lg shadow-brand-500/20"><Plus size={14} /></button>
+                </div>
+             </div>
+             
+             {/* Disclaimer Banner */}
+             <div className="bg-yellow-500/10 border border-yellow-500/20 p-2 rounded-lg flex items-start gap-2">
+                <AlertTriangle size={12} className="text-yellow-500 shrink-0 mt-0.5" />
+                <p className="text-[10px] text-yellow-200/80 leading-tight">
+                  <strong className="text-yellow-400 block mb-0.5">Unofficial Fan Score</strong>
+                  Scores are updated by people at the match. Please check back later for official results confirmed by referee and clubs.
+                </p>
+             </div>
+          </div>
+        )}
       </div>
 
       {/* Footer (Date & Location & Action) */}

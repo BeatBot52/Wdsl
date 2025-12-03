@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronRight, RefreshCw, Star, Shield, Calendar, Trophy, ClipboardList, MapPin, Info, Download, Clock, CloudRain, Sun, Ticket } from 'lucide-react';
+import { ChevronRight, RefreshCw, Star, Calendar, Trophy, ClipboardList, MapPin, Download, Clock, Sun, CloudRain } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import MatchCard from '../components/PlanCard';
 import { UPCOMING_FIXTURES, RECENT_RESULTS, PITCH_STATUS, CLUBS } from '../constants';
 import { Favorite } from '../types';
-import Button from '../components/Button';
 import { WdslLogo } from '../components/WdslLogo';
 
 const Home: React.FC = () => {
@@ -16,6 +15,8 @@ const Home: React.FC = () => {
 
   // --- DATA COMPUTATION ---
   const today = new Date();
+  
+  // Find matches happening TODAY
   const todaysFixtures = UPCOMING_FIXTURES.filter(f => 
     f.date.getDate() === today.getDate() &&
     f.date.getMonth() === today.getMonth() &&
@@ -116,11 +117,11 @@ const Home: React.FC = () => {
         </div>
       </div>
 
-      <div className="px-4 py-4 space-y-6">
+      <div className="py-4 space-y-6">
 
-        {/* --- 1. HERO ACTION CENTER --- */}
+        {/* --- 1. HERO ACTION CENTER (Smart Logic) --- */}
         {/* Priority: Today's Games > User's Next Match > General Promo */}
-        <section className="animate-in slide-in-from-top-4 fade-in duration-500">
+        <section className="px-4 animate-in slide-in-from-top-4 fade-in duration-500">
            
            {upcomingCount > 0 ? (
              // SCENARIO A: GAMES TODAY (High Urgency)
@@ -181,62 +182,41 @@ const Home: React.FC = () => {
            )}
         </section>
 
-        {/* --- 2. QUICK ACTIONS GRID --- */}
-        <section>
-          <div className="grid grid-cols-2 gap-3">
-             <Link to="/fixtures" className="bg-slate-900/80 border border-slate-800 p-4 rounded-2xl flex flex-col justify-between h-28 active:scale-[0.98] transition-all hover:border-brand-500/50 group shadow-sm">
-                <div className="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-400 group-hover:bg-blue-500 group-hover:text-white transition-colors">
-                   <Calendar size={20} />
-                </div>
-                <div>
-                   <span className="block text-white font-bold text-sm">Fixtures</span>
-                   <span className="text-[10px] text-slate-500 group-hover:text-slate-400">Upcoming games</span>
-                </div>
-             </Link>
-             
-             <Link to="/tables" className="bg-slate-900/80 border border-slate-800 p-4 rounded-2xl flex flex-col justify-between h-28 active:scale-[0.98] transition-all hover:border-brand-500/50 group shadow-sm">
-                <div className="w-10 h-10 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-400 group-hover:bg-emerald-500 group-hover:text-white transition-colors">
-                   <Trophy size={20} />
-                </div>
-                <div>
-                   <span className="block text-white font-bold text-sm">Tables</span>
-                   <span className="text-[10px] text-slate-500 group-hover:text-slate-400">League standings</span>
-                </div>
-             </Link>
-
-             <Link to="/results" className="bg-slate-900/80 border border-slate-800 p-4 rounded-2xl flex flex-col justify-between h-28 active:scale-[0.98] transition-all hover:border-brand-500/50 group shadow-sm">
-                <div className="w-10 h-10 rounded-full bg-orange-500/10 flex items-center justify-center text-orange-400 group-hover:bg-orange-500 group-hover:text-white transition-colors">
-                   <ClipboardList size={20} />
-                </div>
-                <div>
-                   <span className="block text-white font-bold text-sm">Results</span>
-                   <span className="text-[10px] text-slate-500 group-hover:text-slate-400">Latest scores</span>
-                </div>
-             </Link>
-
-             <Link to="/clubs" className="bg-slate-900/80 border border-slate-800 p-4 rounded-2xl flex flex-col justify-between h-28 active:scale-[0.98] transition-all hover:border-brand-500/50 group shadow-sm">
-                <div className="w-10 h-10 rounded-full bg-purple-500/10 flex items-center justify-center text-purple-400 group-hover:bg-purple-500 group-hover:text-white transition-colors">
-                   <MapPin size={20} />
-                </div>
-                <div>
-                   <span className="block text-white font-bold text-sm">Directory</span>
-                   <span className="text-[10px] text-slate-500 group-hover:text-slate-400">Club locations</span>
-                </div>
-             </Link>
-          </div>
+        {/* --- 2. QUICK NAVIGATION GRID --- */}
+        <section className="px-4">
+           <div className="grid grid-cols-4 gap-2">
+              <Link to="/fixtures" className="flex flex-col items-center justify-center bg-slate-900 border border-slate-800 rounded-xl p-3 active:scale-95 transition-transform hover:border-blue-500/50 group h-20 shadow-sm">
+                 <Calendar className="text-blue-400 mb-1 group-hover:scale-110 transition-transform" size={24} />
+                 <span className="text-[10px] font-bold text-slate-300">Fixtures</span>
+              </Link>
+              <Link to="/tables" className="flex flex-col items-center justify-center bg-slate-900 border border-slate-800 rounded-xl p-3 active:scale-95 transition-transform hover:border-emerald-500/50 group h-20 shadow-sm">
+                 <Trophy className="text-emerald-400 mb-1 group-hover:scale-110 transition-transform" size={24} />
+                 <span className="text-[10px] font-bold text-slate-300">Tables</span>
+              </Link>
+              <Link to="/results" className="flex flex-col items-center justify-center bg-slate-900 border border-slate-800 rounded-xl p-3 active:scale-95 transition-transform hover:border-orange-500/50 group h-20 shadow-sm">
+                 <ClipboardList className="text-orange-400 mb-1 group-hover:scale-110 transition-transform" size={24} />
+                 <span className="text-[10px] font-bold text-slate-300">Results</span>
+              </Link>
+              <Link to="/clubs" className="flex flex-col items-center justify-center bg-slate-900 border border-slate-800 rounded-xl p-3 active:scale-95 transition-transform hover:border-purple-500/50 group h-20 shadow-sm">
+                 <MapPin className="text-purple-400 mb-1 group-hover:scale-110 transition-transform" size={24} />
+                 <span className="text-[10px] font-bold text-slate-300">Clubs</span>
+              </Link>
+           </div>
         </section>
 
-        {/* --- 3. MY TEAMS REEL --- */}
+        {/* --- 3. MY TEAMS --- */}
         {favorites.length > 0 && (
           <section>
-             <div className="flex justify-between items-center mb-3 px-1">
-                <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider">Following</h3>
+             <div className="flex justify-between items-center mb-2 px-4">
+                <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1">
+                   <Star size={12} className="text-yellow-500 fill-yellow-500" /> Following
+                </h3>
                 <Link to="/clubs" className="text-[10px] font-bold text-brand-400 bg-brand-500/10 px-2 py-1 rounded-lg hover:bg-brand-500/20">
                    Manage
                 </Link>
              </div>
              
-             <div className="flex gap-3 overflow-x-auto pb-4 scrollbar-hide -mx-4 px-4">
+             <div className="flex gap-3 overflow-x-auto pb-4 scrollbar-hide -mx-4 px-4 pl-4">
                 {favorites.map((fav, idx) => {
                   const clubInfo = CLUBS.find(c => c.id === fav.clubId);
                   const teamNextMatch = UPCOMING_FIXTURES.find(f => 
@@ -248,7 +228,7 @@ const Home: React.FC = () => {
                     <div 
                       key={idx}
                       onClick={() => navigate(`/clubs/${fav.clubId}`)}
-                      className="flex-shrink-0 w-64 bg-slate-900 border border-slate-800 rounded-2xl p-4 relative overflow-hidden active:scale-[0.98] transition-transform shadow-lg"
+                      className="flex-shrink-0 w-60 bg-slate-900 border border-slate-800 rounded-2xl p-4 relative overflow-hidden active:scale-[0.98] transition-transform shadow-lg"
                     >
                        <div className="absolute top-0 right-0 p-2 opacity-5">
                           <Trophy size={60} />
@@ -283,8 +263,8 @@ const Home: React.FC = () => {
         )}
 
         {/* --- 4. LATEST RESULTS --- */}
-        <section>
-          <div className="flex justify-between items-center mb-3 px-1">
+        <section className="px-4">
+          <div className="flex justify-between items-center mb-3">
              <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider">Recent Scores</h3>
              <Link to="/results" className="text-brand-400 text-xs font-bold flex items-center hover:text-brand-300">
                View All <ChevronRight size={12} />
