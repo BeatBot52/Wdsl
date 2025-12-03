@@ -1,11 +1,13 @@
+
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Star, Shield, MapPin, Users, ChevronDown, ChevronUp, Trophy } from 'lucide-react';
-import { CLUBS, getClubDivisions, LEAGUE_TABLES } from '../constants';
+import { ArrowLeft, Star, Shield, MapPin, Users, ChevronDown, ChevronUp, Trophy, Globe, ShoppingBag, Facebook, Twitter, Instagram, Calendar } from 'lucide-react';
+import { CLUBS, getClubDivisions, LEAGUE_TABLES, UPCOMING_FIXTURES } from '../constants';
 import { Favorite } from '../types';
 import Button from '../components/Button';
 import TeamLogo from '../components/TeamLogo';
 import LeagueTableWidget from '../components/LeagueTableWidget';
+import MatchCard from '../components/PlanCard';
 
 const ClubDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -53,6 +55,9 @@ const ClubDetail: React.FC = () => {
   };
 
   if (!club) return <div className="p-8 text-center text-white">Club not found</div>;
+
+  // Find next match for this club (any team)
+  const nextMatch = UPCOMING_FIXTURES.find(f => f.homeTeam.id === club.id || f.awayTeam.id === club.id);
 
   const rawDivisions = getClubDivisions(club.name);
   
@@ -111,7 +116,8 @@ const ClubDetail: React.FC = () => {
     <div className="min-h-screen bg-slate-950 pb-24">
       
       {/* Header Image/Gradient */}
-      <div className="h-40 bg-gradient-to-b from-brand-900 to-slate-900 relative">
+      <div className="h-48 bg-gradient-to-b from-brand-900 to-slate-900 relative overflow-hidden">
+        <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
         <button 
           onClick={() => navigate(-1)}
           className="absolute top-4 left-4 p-2 bg-slate-900/50 backdrop-blur rounded-full text-white hover:bg-slate-800 transition-colors z-10"
@@ -120,22 +126,70 @@ const ClubDetail: React.FC = () => {
         </button>
       </div>
 
-      <div className="px-4 sm:px-6 -mt-16 relative z-10">
+      <div className="px-4 sm:px-6 -mt-20 relative z-10">
         <div className="flex flex-col items-center">
           
           {/* Big UHD Logo */}
           <div className="relative">
-             <div className="absolute inset-0 bg-brand-500 blur-[40px] opacity-20 rounded-full"></div>
-             <TeamLogo team={club} size="2xl" className="drop-shadow-2xl" />
+             <div className="absolute inset-0 bg-brand-500 blur-[40px] opacity-30 rounded-full"></div>
+             <div className="bg-slate-950 p-2 rounded-full border-4 border-slate-900 shadow-2xl">
+                <TeamLogo team={club} size="2xl" className="drop-shadow-lg" />
+             </div>
           </div>
 
           <h1 className="text-2xl font-black text-white mt-4 text-center">{club.name}</h1>
-          <div className="flex items-center gap-2 text-slate-400 text-sm mt-1">
-             <MapPin size={14} />
-             <span>Wicklow</span>
+          
+          {/* Metadata Badges */}
+          <div className="flex flex-wrap justify-center gap-3 mt-3">
+             {club.founded && (
+               <span className="text-[10px] font-bold text-slate-400 bg-slate-900 border border-slate-800 px-2 py-1 rounded-full">
+                 Est. {club.founded}
+               </span>
+             )}
+             {club.ground && (
+               <span className="flex items-center gap-1 text-[10px] font-bold text-brand-400 bg-brand-900/20 border border-brand-500/20 px-2 py-1 rounded-full">
+                 <MapPin size={10} /> {club.ground}
+               </span>
+             )}
+          </div>
+
+          {/* Action Bar (Socials/Shop) */}
+          <div className="flex gap-2 mt-6 w-full max-w-sm justify-center">
+             {club.shopUrl && (
+               <a href={club.shopUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition-colors flex-1 justify-center border border-slate-700">
+                  <ShoppingBag size={14} /> Shop
+               </a>
+             )}
+             {club.website && (
+               <a href={club.website} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition-colors flex-1 justify-center border border-slate-700">
+                  <Globe size={14} /> Website
+               </a>
+             )}
+             <div className="flex gap-1">
+               {club.socials?.facebook && (
+                 <a href={`https://facebook.com/${club.socials.facebook}`} target="_blank" rel="noopener noreferrer" className="p-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors"><Facebook size={16} /></a>
+               )}
+               {club.socials?.twitter && (
+                 <a href={`https://twitter.com/${club.socials.twitter}`} target="_blank" rel="noopener noreferrer" className="p-2 bg-sky-500 text-white rounded-xl hover:bg-sky-600 transition-colors"><Twitter size={16} /></a>
+               )}
+               {club.socials?.instagram && (
+                 <a href={`https://instagram.com/${club.socials.instagram}`} target="_blank" rel="noopener noreferrer" className="p-2 bg-pink-600 text-white rounded-xl hover:bg-pink-700 transition-colors"><Instagram size={16} /></a>
+               )}
+             </div>
           </div>
         </div>
 
+        {/* --- MATCH CENTER --- */}
+        {nextMatch && (
+          <div className="mt-8">
+             <h3 className="flex items-center gap-2 text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">
+               <Calendar size={14} /> Next Match
+             </h3>
+             <MatchCard fixture={nextMatch} />
+          </div>
+        )}
+
+        {/* --- SQUADS LIST --- */}
         <div className="mt-8">
            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 text-center mb-8">
              <h2 className="text-lg font-bold text-white mb-2">Follow Your Team</h2>

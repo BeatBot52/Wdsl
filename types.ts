@@ -5,6 +5,16 @@ export interface Team {
   crestUrl?: string;
   shortName: string;
   colors: [string, string]; // Primary, Secondary hex codes
+  // New fields for Club Detail page
+  founded?: string;
+  ground?: string;
+  website?: string;
+  shopUrl?: string;
+  socials?: {
+    facebook?: string;
+    twitter?: string;
+    instagram?: string;
+  };
 }
 
 export interface Fixture {

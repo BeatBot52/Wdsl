@@ -1,5 +1,7 @@
+
 import React, { useState, useEffect } from 'react';
 import { Calendar, MapPin, Clock, CalendarPlus, CloudRain, Sun, Cloud, Wind, ExternalLink, Share2, Navigation, TrendingUp, Radio, AlertTriangle, Minus, Plus } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { Fixture, TableRow } from '../types';
 import TeamLogo from './TeamLogo';
 import { getVenueMapLink, LEAGUE_TABLES } from '../constants';
@@ -48,6 +50,7 @@ const getTeamStats = (division: string, teamName: string) => {
 };
 
 const MatchCard: React.FC<MatchCardProps> = ({ fixture, variant = 'default', className = '' }) => {
+  const navigate = useNavigate();
   const isFinished = fixture.status === 'finished';
   const isHero = variant === 'hero';
   
@@ -90,6 +93,11 @@ const MatchCard: React.FC<MatchCardProps> = ({ fixture, variant = 'default', cla
     window.open(mapLink, '_blank', 'noopener,noreferrer');
   };
 
+  const goToClub = (e: React.MouseEvent, clubId: string) => {
+    e.stopPropagation();
+    navigate(`/clubs/${clubId}`);
+  };
+
   const shareMatch = async (e: React.MouseEvent) => {
     e.stopPropagation();
     const scoreText = isFanUpdated ? `(Live: ${liveScore.home}-${liveScore.away})` : '';
@@ -102,7 +110,6 @@ const MatchCard: React.FC<MatchCardProps> = ({ fixture, variant = 'default', cla
           text: text,
         });
       } catch (error: any) {
-        // Ignore AbortError (User cancelled the share dialog)
         if (error.name !== 'AbortError') {
           console.error('Error sharing:', error);
         }
@@ -174,7 +181,10 @@ const MatchCard: React.FC<MatchCardProps> = ({ fixture, variant = 'default', cla
           </div>
 
           <div className="flex items-center justify-between gap-2">
-            <div className="flex flex-col items-center gap-2 flex-1">
+            <div 
+              className="flex flex-col items-center gap-2 flex-1 cursor-pointer transition-transform active:scale-95"
+              onClick={(e) => goToClub(e, fixture.homeTeam.id)}
+            >
                <TeamLogo team={fixture.homeTeam} size="lg" showShadow={false} className="drop-shadow-lg" />
                <span className="text-white font-black text-xs text-center leading-tight line-clamp-2 w-full">{fixture.homeTeam.shortName}</span>
             </div>
@@ -190,7 +200,10 @@ const MatchCard: React.FC<MatchCardProps> = ({ fixture, variant = 'default', cla
                {isFanUpdated && <span className="text-[9px] text-yellow-300 font-bold animate-pulse mt-1">LIVE (Fan)</span>}
             </div>
 
-            <div className="flex flex-col items-center gap-2 flex-1">
+            <div 
+              className="flex flex-col items-center gap-2 flex-1 cursor-pointer transition-transform active:scale-95"
+              onClick={(e) => goToClub(e, fixture.awayTeam.id)}
+            >
                <TeamLogo team={fixture.awayTeam} size="lg" showShadow={false} className="drop-shadow-lg" />
                <span className="text-white font-black text-xs text-center leading-tight line-clamp-2 w-full">{fixture.awayTeam.shortName}</span>
             </div>
@@ -298,7 +311,10 @@ const MatchCard: React.FC<MatchCardProps> = ({ fixture, variant = 'default', cla
         <div className="flex items-center justify-between gap-2">
           
           {/* Home Team */}
-          <div className="flex-1 flex flex-col items-center gap-2">
+          <div 
+            className="flex-1 flex flex-col items-center gap-2 cursor-pointer transition-transform active:scale-95"
+            onClick={(e) => goToClub(e, fixture.homeTeam.id)}
+          >
             <TeamLogo team={fixture.homeTeam} size="md" className="transition-transform group-hover:scale-105 duration-300" />
             <span className="text-xs font-bold text-slate-200 text-center leading-tight line-clamp-2 h-8 flex items-center justify-center w-full">{fixture.homeTeam.name}</span>
             {!isFinished && homeStats && homeStats.played > 0 && (
@@ -337,7 +353,10 @@ const MatchCard: React.FC<MatchCardProps> = ({ fixture, variant = 'default', cla
           </div>
 
           {/* Away Team */}
-          <div className="flex-1 flex flex-col items-center gap-2">
+          <div 
+            className="flex-1 flex flex-col items-center gap-2 cursor-pointer transition-transform active:scale-95"
+            onClick={(e) => goToClub(e, fixture.awayTeam.id)}
+          >
             <TeamLogo team={fixture.awayTeam} size="md" className="transition-transform group-hover:scale-105 duration-300" />
             <span className="text-xs font-bold text-slate-200 text-center leading-tight line-clamp-2 h-8 flex items-center justify-center w-full">{fixture.awayTeam.name}</span>
             {!isFinished && awayStats && awayStats.played > 0 && (

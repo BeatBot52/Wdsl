@@ -1,3 +1,4 @@
+
 import { NavItem, Fixture, NewsItem, TableRow, Team } from './types';
 
 export const NAV_ITEMS: NavItem[] = [
@@ -17,29 +18,55 @@ export const getVenueMapLink = (venueName: string) => {
   return `https://www.google.com/maps/search/?api=1&query=${query}`;
 };
 
-// Added colors (Hex codes) for vector generation
+// Added metadata for Club Detail page
 export const CLUBS: Team[] = [
-  { id: '1', name: 'Arklow Town', shortName: 'ARK', colors: ['#000000', '#FFFFFF'] }, // Black/White
-  { id: '2', name: 'Wicklow Rovers', shortName: 'WIC', colors: ['#16a34a', '#FFFFFF'] }, // Green/White
-  { id: '3', name: 'Ashford Rovers', shortName: 'ASH', colors: ['#2563eb', '#FFFFFF'] }, // Blue/White
-  { id: '4', name: 'Newtown Juniors', shortName: 'NEW', colors: ['#dc2626', '#000000'] }, // Red/Black
-  { id: '5', name: 'St. Patricks', shortName: 'STP', colors: ['#15803d', '#facc15'] }, // Green/Yellow (Avoca)
-  { id: '6', name: 'Glencormac United', shortName: 'GLE', colors: ['#16a34a', '#facc15'] }, // Green/Yellow
-  { id: '7', name: 'Roundwood AFC', shortName: 'RND', colors: ['#16a34a', '#FFFFFF'] }, // Green/White
-  { id: '8', name: 'Greystones United', shortName: 'GRE', colors: ['#16a34a', '#FFFFFF'] }, // Green/White
-  { id: '9', name: 'Coolboy Rangers', shortName: 'COO', colors: ['#2563eb', '#facc15'] }, // Blue/Yellow
-  { id: '10', name: 'Rathnew AFC', shortName: 'RAT', colors: ['#16a34a', '#fbbf24'] }, // Green/Gold
-  { id: '11', name: 'Wolfe Tone', shortName: 'WOL', colors: ['#3b82f6', '#FFFFFF'] }, // Blue/White
-  { id: '12', name: 'Avonmore', shortName: 'AVO', colors: ['#1e3a8a', '#60a5fa'] }, // Dark Blue/Light Blue
-  { id: '13', name: 'Enniskerry YC', shortName: 'ENN', colors: ['#3b82f6', '#FFFFFF'] }, // Blue/White
-  { id: '14', name: 'Carnew', shortName: 'CAR', colors: ['#dc2626', '#000000'] }, // Red/Black
-  { id: '15', name: 'Aughrim Rangers', shortName: 'AUG', colors: ['#2563eb', '#FFFFFF'] }, // Blue/White
-  { id: '16', name: 'Shillelagh', shortName: 'SHI', colors: ['#16a34a', '#fbbf24'] }, // Green/Gold
-  { id: '17', name: 'Ardmore Rovers', shortName: 'ARD', colors: ['#000000', '#2563eb'] }, // Black/Blue
-  { id: '18', name: 'St. Anthonys', shortName: 'STA', colors: ['#dc2626', '#000000'] }, // Red/Black
-  { id: '19', name: 'Kilcoole', shortName: 'KIL', colors: ['#16a34a', '#FFFFFF'] }, // Green/White
-  { id: '20', name: 'Arklow United', shortName: 'AKU', colors: ['#000000', '#dc2626'] }, // Black/Red
-  { id: '21', name: 'Arklow Celtic', shortName: 'CEL', colors: ['#16a34a', '#60a5fa'] }, // Green/Sky Blue
+  { 
+    id: '1', 
+    name: 'Arklow Town', 
+    shortName: 'ARK', 
+    colors: ['#000000', '#FFFFFF'],
+    founded: '1948',
+    ground: 'Travers Insurances Park',
+    shopUrl: 'https://www.oneills.com/',
+    socials: { facebook: 'arklowtownfc', twitter: 'arklowtown' }
+  }, 
+  { 
+    id: '2', 
+    name: 'Wicklow Rovers', 
+    shortName: 'WIC', 
+    colors: ['#16a34a', '#FFFFFF'],
+    founded: '1932',
+    ground: 'Whitegates',
+    shopUrl: 'https://www.oneills.com/',
+    socials: { facebook: 'wicklowrovers', instagram: 'wicklowroversafc' }
+  },
+  { 
+    id: '3', 
+    name: 'Ashford Rovers', 
+    shortName: 'ASH', 
+    colors: ['#2563eb', '#FFFFFF'],
+    founded: '1975',
+    ground: 'Ballinalea Park',
+    socials: { facebook: 'ashfordrovers' }
+  },
+  { id: '4', name: 'Newtown Juniors', shortName: 'NEW', colors: ['#dc2626', '#000000'], ground: 'Newtown Community Pitch' },
+  { id: '5', name: 'St. Patricks', shortName: 'STP', colors: ['#15803d', '#facc15'], ground: 'Avoca Community Centre' },
+  { id: '6', name: 'Glencormac United', shortName: 'GLE', colors: ['#16a34a', '#facc15'], ground: 'Gerry O\'Toole Park' },
+  { id: '7', name: 'Roundwood AFC', shortName: 'RND', colors: ['#16a34a', '#FFFFFF'], ground: 'Vartry Grounds' },
+  { id: '8', name: 'Greystones United', shortName: 'GRE', colors: ['#16a34a', '#FFFFFF'], ground: 'Woodlands' },
+  { id: '9', name: 'Coolboy Rangers', shortName: 'COO', colors: ['#2563eb', '#facc15'], ground: 'Coolboy' },
+  { id: '10', name: 'Rathnew AFC', shortName: 'RAT', colors: ['#16a34a', '#fbbf24'], ground: 'Shamrock Park' },
+  { id: '11', name: 'Wolfe Tone', shortName: 'WOL', colors: ['#3b82f6', '#FFFFFF'], ground: 'Vartry Grounds' },
+  { id: '12', name: 'Avonmore', shortName: 'AVO', colors: ['#1e3a8a', '#60a5fa'], ground: 'Tullynally' },
+  { id: '13', name: 'Enniskerry YC', shortName: 'ENN', colors: ['#3b82f6', '#FFFFFF'], ground: 'Berryfield' },
+  { id: '14', name: 'Carnew', shortName: 'CAR', colors: ['#dc2626', '#000000'], ground: 'Carnew' },
+  { id: '15', name: 'Aughrim Rangers', shortName: 'AUG', colors: ['#2563eb', '#FFFFFF'], ground: 'Allen Park' },
+  { id: '16', name: 'Shillelagh', shortName: 'SHI', colors: ['#16a34a', '#fbbf24'], ground: 'Ballinvalley' },
+  { id: '17', name: 'Ardmore Rovers', shortName: 'ARD', colors: ['#000000', '#2563eb'], ground: 'Ballywaltrim' },
+  { id: '18', name: 'St. Anthonys', shortName: 'STA', colors: ['#dc2626', '#000000'], ground: 'Finn Park' },
+  { id: '19', name: 'Kilcoole', shortName: 'KIL', colors: ['#16a34a', '#FFFFFF'], ground: 'Kilcoole' },
+  { id: '20', name: 'Arklow United', shortName: 'AKU', colors: ['#000000', '#dc2626'], ground: 'Arklow' },
+  { id: '21', name: 'Arklow Celtic', shortName: 'CEL', colors: ['#16a34a', '#60a5fa'], ground: 'Celtic Park' },
 ];
 
 // Helper to access clubs easily
